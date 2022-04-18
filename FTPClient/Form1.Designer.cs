@@ -33,6 +33,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.usersList = new System.Windows.Forms.ListBox();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -118,7 +119,7 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(61, 258);
+            this.btnLoad.Location = new System.Drawing.Point(12, 258);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(85, 23);
             this.btnLoad.TabIndex = 9;
@@ -126,11 +127,22 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(108, 258);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(85, 23);
+            this.btnDelete.TabIndex = 10;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(204, 291);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.usersList);
             this.Controls.Add(this.btnSave);
@@ -159,13 +171,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox host;
-        private System.Windows.Forms.TextBox login;
-        private System.Windows.Forms.TextBox password;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ListBox usersList;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnDelete;
+        public System.Windows.Forms.TextBox host;
+        public System.Windows.Forms.TextBox login;
+        public System.Windows.Forms.TextBox password;
     }
 }
 

@@ -1,5 +1,5 @@
 {
-  "Host": "ftp://192.168.0.116",
+  "Host": "ftp://192.168.56.1",
   "Login": "user",
-  "Password": "rure1233"
+  "Password": "1233"
 }

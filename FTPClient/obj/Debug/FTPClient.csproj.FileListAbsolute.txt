@@ -28,3 +28,4 @@ C:\Users\admin\Desktop\My_Folder\Csharp\FTPClient\FTPClient\obj\Debug\FTPClient.
 C:\Users\admin\Desktop\My_Folder\Csharp\FTPClient\FTPClient\obj\Debug\FTPClient.csproj.CopyComplete
 C:\Users\admin\Desktop\My_Folder\Csharp\FTPClient\FTPClient\obj\Debug\FTPClient.exe
 C:\Users\admin\Desktop\My_Folder\Csharp\FTPClient\FTPClient\obj\Debug\FTPClient.pdb
+C:\Users\admin\Desktop\My_Folder\Csharp\FTPClient\FTPClient\obj\Debug\FTPClient.Form2.resources
