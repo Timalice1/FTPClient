@@ -50,6 +50,7 @@
             this.btnCreateDir.TabIndex = 2;
             this.btnCreateDir.Text = "Create directory";
             this.btnCreateDir.UseVisualStyleBackColor = true;
+            this.btnCreateDir.Click += new System.EventHandler(this.btnCreateDir_Click);
             // 
             // btnUpload
             // 
@@ -59,6 +60,7 @@
             this.btnUpload.TabIndex = 3;
             this.btnUpload.Text = "Upload file";
             this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // dirName
             // 
@@ -82,6 +84,7 @@
             this.btnOpenFile.TabIndex = 6;
             this.btnOpenFile.Text = "...";
             this.btnOpenFile.UseVisualStyleBackColor = true;
+            this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
             // 
             // progressBar1
             // 

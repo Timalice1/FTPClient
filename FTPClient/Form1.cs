@@ -27,7 +27,7 @@ namespace FTPClient {
                 request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
 
-                var userForm = new Form2(login.Text, host.Text, (NetworkCredential)request.Credentials, response);
+                var userForm = new Form2(login.Text, host.Text, (NetworkCredential)request.Credentials);
                 userForm.Show();
             }
             catch (Exception ex) {

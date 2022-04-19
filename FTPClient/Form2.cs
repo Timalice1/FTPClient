@@ -10,6 +10,8 @@ namespace FTPClient {
 
         private string host;
         private NetworkCredential credential;
+        private Regex file = new Regex(@".+\..+");
+
 
         public Form2(string name, string host, NetworkCredential credential) {
             InitializeComponent();
@@ -21,7 +23,17 @@ namespace FTPClient {
         }
 
         private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e) {
-            throw new NotImplementedException();
+            try {
+                if (!file.IsMatch(e.Node.FullPath)) {
+                    dirName.Text = e.Node.FullPath + "\\";
+                    fileName.Text = e.Node.FullPath + "\\";
+                }
+                else {
+                    dirName.Text = e.Node.Parent.FullPath;
+                    fileName.Text = e.Node.Parent.FullPath;
+                }
+            }
+            catch { }
         }
 
         private void Form2_Load(object sender, EventArgs e) {
@@ -34,7 +46,6 @@ namespace FTPClient {
 
             using (var reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1251))) {
                 var regex = new Regex(@".+\d\d:\d\d\s");
-                var file = new Regex(@".+\..+");
                 while (!reader.EndOfStream) {
                     string nodeName = regex.Replace(reader.ReadLine(), "");
 
@@ -60,7 +71,6 @@ namespace FTPClient {
 
             using (var reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1251))) {
                 var regex = new Regex(@".+\d\d:\d\d\s");
-                var file = new Regex(@".+\..+");
                 while (!reader.EndOfStream) {
                     string nodeName = regex.Replace(reader.ReadLine(), "");
 
@@ -83,15 +93,27 @@ namespace FTPClient {
                 var res = MessageBox.Show($"You realy want to delete \"{treeView1.SelectedNode.FullPath}?\"",
                     "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-                if(res == DialogResult.OK) {
+                string name;
+                if(treeView1.SelectedNode.FullPath.Contains("\\"))
+                    name = treeView1.SelectedNode.FullPath.Remove(0, treeView1.SelectedNode.FullPath.LastIndexOf("\\"));
+                else name = treeView1.SelectedNode.FullPath;
+
+                var deleteFile = WebRequestMethods.Ftp.DeleteFile;
+                var deleteDir = WebRequestMethods.Ftp.RemoveDirectory;
+
+                if (res == DialogResult.OK) {
                     FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{host}/{treeView1.SelectedNode.FullPath}");
                     request.Credentials = credential;
-                    request.Method = WebRequestMethods.Ftp.DeleteFile;
+                    if (file.IsMatch(name))
+                        request.Method = deleteFile;
+                    else
+                        request.Method = deleteDir;
                     FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                    MessageBox.Show($"\"{treeView1.SelectedNode.FullPath}\" deleted");
 
                     //Update treeView
                     Form2_Load(sender, e);
-
                 }
 
             }catch (Exception ex){
@@ -99,5 +121,73 @@ namespace FTPClient {
             }
         }
 
+        private void btnCreateDir_Click(object sender, EventArgs e) {
+            try {
+                if (dirName.Text == treeView1.SelectedNode.FullPath)
+                    throw new Exception("This folder already exist");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{host}/{dirName.Text}");
+                request.Credentials = credential;
+                request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                //Update treeView
+                Form2_Load(sender, e);
+
+                MessageBox.Show($"\"{dirName.Text}\" created");
+
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private string fullFilePath = "";
+
+        private void btnUpload_Click(object sender, EventArgs e) {
+            try {
+                string name = "";
+
+                if(name.Contains("\\"))
+                    name = fileName.Text.Remove(0, fileName.Text.LastIndexOf("\\"));
+                else name = fileName.Text;
+
+                if (!file.IsMatch(name))
+                    throw new Exception("Invalid file name");
+
+                var createFile = WebRequestMethods.Ftp.AppendFile;
+                var uploadFile = WebRequestMethods.Ftp.UploadFile;
+
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{host}/{fileName.Text}");
+                request.Credentials = credential;
+
+                if (fileName.Text.StartsWith(treeView1.SelectedNode.FullPath) || file.IsMatch(fileName.Text))
+                    request.Method = createFile;
+                else request.Method = uploadFile;
+
+                byte[] _file = File.ReadAllBytes(fullFilePath);
+                Stream strz = request.GetRequestStream();
+                strz.Write(_file, 0, _file.Length);
+                strz.Close();
+                strz.Dispose();
+                
+                //Update treeView
+                Form2_Load(sender, e);
+
+                MessageBox.Show($"\"{fileName.Text}\" created");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnOpenFile_Click(object sender, EventArgs e) {
+            var ofd= new OpenFileDialog();
+            var res = ofd.ShowDialog();
+
+            if(res == DialogResult.OK) {
+                fullFilePath = ofd.FileName;
+                fileName.Text += $"\\{ofd.SafeFileName}";
+            }
+        }
     }
 }
