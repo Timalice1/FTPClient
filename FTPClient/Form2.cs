@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -16,7 +17,6 @@ namespace FTPClient {
         public Form2(string name, string host, NetworkCredential credential) {
             InitializeComponent();
             this.Text = name;
-            progressBar1.Hide();
             this.host = host;
             this.credential = credential;
             treeView1.AfterSelect += TreeView1_AfterSelect;
@@ -29,8 +29,14 @@ namespace FTPClient {
                     fileName.Text = e.Node.FullPath + "\\";
                 }
                 else {
-                    dirName.Text = e.Node.Parent.FullPath;
-                    fileName.Text = e.Node.Parent.FullPath;
+                    if(e.Node.Parent != null) {
+                        dirName.Text = e.Node.Parent.FullPath;
+                        fileName.Text = e.Node.Parent.FullPath;
+                    }
+                    else {
+                        dirName.Text = "\\";
+                        fileName.Text = "\\";
+                    }
                 }
             }
             catch { }
@@ -187,6 +193,40 @@ namespace FTPClient {
             if(res == DialogResult.OK) {
                 fullFilePath = ofd.FileName;
                 fileName.Text += $"\\{ofd.SafeFileName}";
+            }
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
+            if (!file.IsMatch(e.Node.Text)) {
+                e.Node.Expand();
+            }
+            else {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{host}/{e.Node.FullPath}");
+                request.Credentials = credential;
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                var saveFile = new FolderBrowserDialog() {
+                    Description = "Download file"
+                };
+                if(saveFile.ShowDialog() == DialogResult.OK) {
+
+                    Stream responseStream = response.GetResponseStream();
+
+                    FileStream fs = new FileStream($"{saveFile.SelectedPath}\\{e.Node.Text}", FileMode.Create);
+
+                    //Буфер для считываемых данных
+                    byte[] buffer = new byte[64];
+                    int size = 0;
+
+                    while ((size = responseStream.Read(buffer, 0, buffer.Length)) > 0) {
+                        fs.Write(buffer, 0, size);
+                    }
+                    fs.Close();
+                    response.Close();
+
+                    MessageBox.Show($"{e.Node.Text} downloaded to {saveFile.SelectedPath}");
+                }
             }
         }
     }

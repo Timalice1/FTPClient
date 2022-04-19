@@ -29,7 +29,6 @@
             this.dirName = new System.Windows.Forms.TextBox();
             this.fileName = new System.Windows.Forms.TextBox();
             this.btnOpenFile = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.btnDelete2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -41,6 +40,7 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(273, 333);
             this.treeView1.TabIndex = 0;
+            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
             // 
             // btnCreateDir
             // 
@@ -86,13 +86,6 @@
             this.btnOpenFile.UseVisualStyleBackColor = true;
             this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 423);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(249, 23);
-            this.progressBar1.TabIndex = 7;
-            // 
             // btnDelete2
             // 
             this.btnDelete2.Location = new System.Drawing.Point(12, 339);
@@ -107,9 +100,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 455);
+            this.ClientSize = new System.Drawing.Size(273, 425);
             this.Controls.Add(this.btnDelete2);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.fileName);
             this.Controls.Add(this.dirName);
@@ -133,7 +125,6 @@
         private System.Windows.Forms.TextBox dirName;
         private System.Windows.Forms.TextBox fileName;
         private System.Windows.Forms.Button btnOpenFile;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnDelete2;
     }
 }
